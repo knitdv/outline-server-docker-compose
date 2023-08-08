@@ -9,9 +9,6 @@ services:
         - SB_METRICS_URL=$DC_METRICS_URL
         - SB_DEFAULT_SERVER_NAME=$DC_DEFAULT_SERVER_NAME
         - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-        #хз возможно не надо указывать версию
-        #- NODE_VERSION=16.18.0
-        #- YARN_VERSION=1.22.19
     image: $DC_IMAGE
     container_name: shadowbox
     volumes:
