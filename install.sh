@@ -261,6 +261,9 @@ function generate_secret_key() {
 
 function generate_certificate() {
   # Generate self-signed cert and store it in the persistent state directory.
+  local -r CERTIFICATE_CONTAINER_NAME="${STATE_CONTAINER_DIR}/shadowbox-selfsigned"
+  readonly SB_CERTIFICATE_CONTAINER_FILE="${CERTIFICATE_CONTAINER_NAME}.crt"
+  readonly SB_PRIVATE_KEY_CONTAINER_FILE="${CERTIFICATE_CONTAINER_NAME}.key"
   local -r CERTIFICATE_NAME="${STATE_DIR}/shadowbox-selfsigned"
   readonly SB_CERTIFICATE_FILE="${CERTIFICATE_NAME}.crt"
   readonly SB_PRIVATE_KEY_FILE="${CERTIFICATE_NAME}.key"
@@ -301,19 +304,19 @@ function write_config() {
 }
 
 function start_shadowbox() {
-#èçìåíåííàÿ ôóíêöèÿ äëÿ ñîçäàíèå docker-compose ôàéëà
+#Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð½Ð°Ñ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ Ð´Ð»Ñ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ðµ docker-compose Ñ„Ð°Ð¹Ð»Ð°
 
-    export DC_STATE_DIR="${STATE_DIR}"
+    export DC_STATE_DIR="${STATE_CONTAINER_DIR}"
     export DC_API_PREFIX="${SB_API_PREFIX}"
     export DC_API_PORT="${API_PORT}"
-    export DC_CERTIFICATE_FILE="${SB_CERTIFICATE_FILE}"
-    export DC_PRIVATE_KEY_FILE="${SB_PRIVATE_KEY_FILE}"
+    export DC_CERTIFICATE_FILE="${SB_CERTIFICATE_CONTAINER_FILE}"
+    export DC_PRIVATE_KEY_FILE="${SB_PRIVATE_KEY_CONTAINER_FILE}"
     export DC_METRICS_URL="${SB_METRICS_URL:-}"
     export DC_DEFAULT_SERVER_NAME="${SB_DEFAULT_SERVER_NAME:-}"
 	  export DC_IMAGE="${SB_IMAGE}"
 	  export DC_KEYS_PORT="${FLAGS_KEYS_PORT}"
-    export DC_DATA_DIR="${STATE_CONTAINER_DIR}"
-    export DC_STATE_DIR="${STATE_DIR}"
+    export DC_DATA_CONTAINER_DIR="${STATE_CONTAINER_DIR}"
+    export DC_DATA_DIR="${STATE_DIR}"
 	  cat docker-compose_template.yml | envsubst "$(printf '${%s}\n' ${!DC_@})" > docker-compose.yml
     local STDERR_OUTPUT
     STDERR_OUTPUT="$(docker-compose up -d  2>&1 >/dev/null)" && return
@@ -381,7 +384,7 @@ function check_firewall() {
   if ! fetch --max-time 5 --cacert "${SB_CERTIFICATE_FILE}" "${PUBLIC_API_URL}/access-keys" >/dev/null; then
      log_error "BLOCKED"
      FIREWALL_STATUS="\
-You won’t be able to access it externally, despite your server being correctly
+You wonâ€™t be able to access it externally, despite your server being correctly
 set up, because there's a firewall (in this machine, your router or cloud
 provider) that is preventing incoming connections to ports ${API_PORT} and ${ACCESS_KEY_PORT}."
   else
@@ -432,7 +435,7 @@ install_shadowbox() {
 
   log_for_sentry "Creating Outline directory"
   export SHADOWBOX_DIR="${FLAGS_DATA_DIR}/outline"
-  export SHADOWBOX_CONTAINER_DIR="${SHADOWBOX_DIR:-/opt/outline}"
+  export SHADOWBOX_CONTAINER_DIR="${SHADOWBOX_CONTAINER_DIR:-/opt/outline}"
   mkdir -p "${SHADOWBOX_DIR}"
   chmod u+s,ug+rwx,o-rwx "${SHADOWBOX_DIR}"
 
