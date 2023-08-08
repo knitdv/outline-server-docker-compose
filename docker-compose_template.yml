@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  shadowbox:
+    environment:
+        - SB_API_PORT=$DC_API_PORT
+        - SB_API_PREFIX=$DC_API_PREFIX
+        - SB_CERTIFICATE_FILE=$DC_CERTIFICATE_FILE
+        - SB_PRIVATE_KEY_FILE=$DC_PRIVATE_KEY_FILE
+        - SB_METRICS_URL=$DC_METRICS_URL
+        - SB_DEFAULT_SERVER_NAME=$DC_DEFAULT_SERVER_NAME
+        - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+        #хз возможно не надо указывать версию
+        #- NODE_VERSION=16.18.0
+        #- YARN_VERSION=1.22.19
+    image: $DC_IMAGE
+    container_name: shadowbox
+    volumes:
+      - $DC_DATA_DIR:$DC_STATE_DIR
+    ports:
+      - "$DC_KEYS_PORT:$DC_KEYS_PORT/tcp"
+      - "$DC_API_PORT:$DC_API_PORT/tcp"
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+ 
+
