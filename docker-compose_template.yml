@@ -2,6 +2,7 @@ version: "3.7"
 services:
   shadowbox:
     environment:
+        - SB_STATE_DIR=$DC_STATE_DIR
         - SB_API_PORT=$DC_API_PORT
         - SB_API_PREFIX=$DC_API_PREFIX
         - SB_CERTIFICATE_FILE=$DC_CERTIFICATE_FILE
@@ -12,9 +13,9 @@ services:
     image: $DC_IMAGE
     container_name: shadowbox
     volumes:
-      - $DC_DATA_DIR:$DC_STATE_DIR
+      - $DC_DATA_DIR:$DC_DATA_CONTAINER_DIR
     ports:
-      - "$DC_KEYS_PORT:$DC_KEYS_PORT/tcp"
+      - "$DC_KEYS_PORT:$DC_KEYS_PORT"
       - "$DC_API_PORT:$DC_API_PORT/tcp"
     restart: unless-stopped
     cap_add:
