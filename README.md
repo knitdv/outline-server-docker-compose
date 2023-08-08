@@ -12,5 +12,5 @@ Run project
 
 1.Clone git repository
 
-2 Run the script with the parameters./install.sh --hostname s1.test.ru --api-port 2543 --keys-port 12345 --data-dir /data/
+2 Run the script with the parameters./install.sh --hostname s1.test.ru --api-port 2543 --keys-port 12345 --data-dir /data
 
