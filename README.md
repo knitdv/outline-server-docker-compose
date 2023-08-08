@@ -8,7 +8,7 @@ Watchwoter has been removed in the project, it is easy to add it yourself.
 
 Automatic docker-compose file generation has also been added for the convenience of server migration between VDS.
 
-Run project 
+#Run project 
 
 1.Clone git repository
 
